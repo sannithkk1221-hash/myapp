@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(45deg, rgba(255,107,107,0.8), rgba(78,205,196,0.8), rgba(69,183,209,0.8), rgba(249,202,36,0.8), rgba(108,92,231,0.8), rgba(255,235,59,0.8)), url('https://source.unsplash.com/featured/?algorithm') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        header {
+            background: linear-gradient(135deg, #ff4500, #ff1493);
+            text-align: center;
+            padding: 50px 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        section {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .about { border-left: 5px solid #00ff00; }
+        .skills { border-left: 5px solid #ff00ff; }
+        .projects { border-left: 5px solid #ffff00; color: #333; background: rgba(249,202,36,0.8); }
+        .contact { border-left: 5px solid #00ffff; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin: 10px 0; }
+        button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #4ecdc4, #ff6b6b);
+        }
+        a { color: #ffeb3b; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .loading { font-style: italic; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sannith Kumar's Portfolio</h1>
+        <p>Full-Stack Developer | Creative Thinker</p>
+    </header>
+    
+    <section class="about">
+        <h2>About Me</h2>
+        <p>Passionate about building innovative web applications. Skilled in HTML, CSS, JavaScript, and more.</p>
+    </section>
+    
+    <section class="skills">
+        <h2>Skills</h2>
+        <div id="skillsContainer" class="loading">Loading skills from backend...</div>
+    </section>
+    
+    <section class="projects">
+        <h2>Projects</h2>
+        <div id="projectsContainer" class="loading">Loading projects from backend...</div>
+    </section>
+    
+    <section class="contact">
+        <h2>Contact</h2>
+        <p>Email: your.email@example.com</p>
+        <p>LinkedIn: <a href="#">linkedin.com/in/yourprofile</a></p>
+        <button onclick="window.location.href='mailto:your.email@example.com'">Send Email</button>
+    </section>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+
+        function viewProject(projectId) {
+            window.location.href = `project-details.html?id=${projectId}`;
+        }
+
+        // Fetch skills from backend
+        fetch(`${API_URL}/api/skills`)
+            .then(response => response.json())
+            .then(data => {
+                let html = '<ul>';
+                for (let category in data) {
+                    html += `<li><strong>${category.toUpperCase()}:</strong> ${data[category].join(', ')}</li>`;
+                }
+                html += '</ul>';
+                document.getElementById('skillsContainer').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error fetching skills:', error);
+                document.getElementById('skillsContainer').innerHTML = 'Failed to load skills. Make sure backend is running!';
+            });
+
+        // Fetch projects from backend
+        fetch(`${API_URL}/api/projects`)
+            .then(response => response.json())
+            .then(data => {
+                let html = '<ul>';
+                data.forEach(project => {
+                    html += `<li><strong>${project.title}:</strong> ${project.description} <button onclick="viewProject(${project.id})">View Details</button></li>`;
+                });
+                html += '</ul>';
+                document.getElementById('projectsContainer').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error fetching projects:', error);
+                document.getElementById('projectsContainer').innerHTML = 'Failed to load projects. Make sure backend is running!';
+            });
+    </script>
+</body>
+</html>
