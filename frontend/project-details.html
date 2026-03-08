@@ -84,7 +84,7 @@
 
         if (projectId) {
             // Fetch project details from backend
-            fetch(`http://localhost:5000/api/projects`)
+            fetch(`https://ba-35fd313ba5b74fefbf0d45b68c317141.ecs.us-east-1.on.aws/api/projects`)
                 .then(response => response.json())
                 .then(projects => {
                     const project = projects.find(p => p.id == projectId);
