@@ -51,8 +51,7 @@ jobs:
     #       --force-new-deployment
  
  
-# ---------------- FRONTEND ----------------
- 
+# ---------------- FRONTEND ---------------
     - name: Build Frontend Image
       run: |
         docker build -t frontend ./frontend
