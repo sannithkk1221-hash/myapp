@@ -2,35 +2,24 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout Code') {
+        stage('Build Docker Image') {
             steps {
-                checkout scm
+                sh 'docker build -t my-python-app .'
             }
         }
 
-        stage('Check Python Version') {
-            steps {
-                sh 'python3 --version'
-            }
-        }
-
-        stage('Install Dependencies') {
+        stage('Run Docker Container') {
             steps {
                 sh '''
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install --upgrade pip
-                if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                docker rm -f my-python-app-container || true
+                docker run -d -p 5000:5000 --name my-python-app-container my-python-app
                 '''
             }
         }
 
-        stage('Run Application') {
+        stage('Check Running Containers') {
             steps {
-                sh '''
-                . venv/bin/activate
-                python3 app.py
-                '''
+                sh 'docker ps'
             }
         }
     }
