@@ -21,9 +21,9 @@ pipeline {
             }
         }
 
-        stage('Run App') {
+        stage('Syntax Check') {
             steps {
-                sh 'python app.py'
+                sh 'python -m py_compile app.py'
             }
         }
     }
