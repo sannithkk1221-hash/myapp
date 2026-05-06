@@ -1,25 +1,14 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11'
+        }
+    }
 
     stages {
-        stage('Build Docker Image') {
+        stage('Run App') {
             steps {
-                sh 'docker build -t my-python-app .'
-            }
-        }
-
-        stage('Run Docker Container') {
-            steps {
-                sh '''
-                docker rm -f my-python-app-container || true
-                docker run -d -p 5000:5000 --name my-python-app-container my-python-app
-                '''
-            }
-        }
-
-        stage('Check Running Containers') {
-            steps {
-                sh 'docker ps'
+                sh 'python app.py'
             }
         }
     }
